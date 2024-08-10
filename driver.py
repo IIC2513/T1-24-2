@@ -20,7 +20,7 @@ class Driver:
 
     def load_page(self, page: str) -> None:
         self.driver.get(page)
-        sleep(60)
+        sleep(5)
 
     def click_element(self, xpath: str) -> None:
         sleep(1)

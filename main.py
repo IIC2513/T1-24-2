@@ -6,19 +6,14 @@ def execute_scrapping():
     chrome_.initialize_driver()
     chrome_.load_page('https://olympics.com/')
 
-    #chrome_.click_element('//*[@id="onetrust-accept-btn-handler"]')
-
-    chrome_.click_element('//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
-
-
-
-    # scrapper = Scrapper(chrome_)
+    scrapper = Scrapper(chrome_)
+    scrapper.find_by_total_medals(2)
     # info_pokemons = scrapper.extract_pokemon_info(list_pokemons)
     # sorted_info = scrapper.sort_by_weight(info_pokemons)
 
     # scrapper.write_csv(sorted_info)
 
-    chrome_.quit_driver()
+    chrome_.close()
     print("Fin del programa")
 
 if __name__ == '__main__':
