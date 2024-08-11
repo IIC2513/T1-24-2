@@ -14,13 +14,16 @@ class Scrapper:
         self.chrome.click_element('/html/body/div[4]/div[1]/div[2]')
         countries_info = []
 
-        for index in (1, quantity+1):
+        xpath_father = '/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/'
+
+        for index in range(1, quantity+1):
             country_info = []
-            country = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div[{index}]/div/div/div/span[3]')
-            gold = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div[{index}]/div/div/span[1]')
-            silver = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div[{index}]/div/div/span[2]')
-            bronce = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div[{index}]/div/div/span[3]')
-            total = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div[{index}]/div/div/span[4]')
+
+            country = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/div/span[3]')
+            gold = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[1]')
+            silver = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[2]')
+            bronce = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[3]')
+            total = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[4]')
             country_info.append(country.text)
             country_info.append(gold.text)
             country_info.append(silver.text)
@@ -62,7 +65,7 @@ class Scrapper:
         with open(filename, mode='w', newline='', encoding='utf-8') as file:
             file.write(header)
             for country in info:
-                file.write(f"{country[0].upper};{country[1]};{country[2]};{country[3]};{country[4]}\n")
+                file.write(f"{country[0].upper()};{country[1]};{country[2]};{country[3]};{country[4]}\n")
             file.close()
 
         print(f"Se ha creado el archivo {filename}\n")
