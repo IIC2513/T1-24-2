@@ -8,10 +8,14 @@ def execute_scrapping():
 
     scrapper = Scrapper(chrome_)
 
-    countries = scrapper.find_top_10_countries()
+    # Test 1
+    # countries = scrapper.find_top_10_countries()
+    # print(countries)
     
-    print(countries)
-
+    # Test 2
+    country = 'Japan'
+    sports = scrapper.find_top_3_sports_from(country)
+    print(sports)
 
     chrome_.close()
     print("Fin del programa")
