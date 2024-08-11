@@ -13,8 +13,8 @@ class Driver:
         self.driver = None
 
     def initialize_driver(self) -> None:
-        self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=self.options)
-
+        # self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+        self.driver = webdriver.Chrome()
         self.driver.delete_all_cookies()
         self.driver.maximize_window()
 
@@ -29,6 +29,11 @@ class Driver:
 
     def find_element(self, xpath: str) -> WebElement:
         return self.driver.find_element(by=By.XPATH, value=xpath)
+
+    def scroll_to_element(self, xpath: str) -> None:
+        element = self.find_element(xpath)
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
+        sleep(2)  # Espera para asegurar que el scroll ha tenido efecto
 
     def close(self) -> None:
         self.driver.quit()
