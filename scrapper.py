@@ -3,139 +3,202 @@ from selenium.webdriver.common.keys import Keys
 from driver import Driver
 from time import sleep
 
+
+
 class Scrapper:
 
     def __init__(self, chrome: Driver):
         self.chrome = chrome
 
-    def find_by_total_medals(self, quantity: int) -> None:
-        self.chrome.click_element('//*[@id="onetrust-accept-btn-handler"]')
-        self.chrome.click_element('//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
-        self.chrome.driver.execute_script("window.scrollTo(0, 100);")
-        self.chrome.click_element('//*[@id="p2024-main-content"]/div[1]/div[1]/div/div[1]/div[2]/div[1]/div[1]')
-        sleep(5)  
-        self.chrome.click_element('/html/body/div[4]/div[1]/div[2]')
-        countries_info = []
+    def find_top_10_countries(self) -> list:
+        self.chrome.load_page('https://olympics.com/')
+        print("Página cargada\n")
+        print("durmiendo 1s")
+        sleep(1)
 
+        print("seleccionando coockies")
+        # trata de aceptar coockies si existe:
+        try:
+            self.chrome.click_element('//*[@id="onetrust-accept-btn-handler"]')
+        except:
+            pass
+
+        print("ir a tablas de medallas") 
+        self.chrome.click_element('//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
+
+        #Hacer scroll hasta el elemento con Xpath = /html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div[8]/div/div/div
+        print("Haciendo scroll para cargar info necesaria")
+        self.chrome.scroll_to_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div[8]/div/div/div')
+
+        countries_info = []
+        quantity = 10    # Con hasta 8 funciona, pero 9 y 10 ya no se puede hasta hacer scroll
+        
         xpath_father = '/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/'
-        self.chrome.driver.execute_script("window.scrollTo(0, 400);")
 
         for index in range(1, quantity+1):
-            country_info = []
-            sleep(5)
+            print(index)
+
             country = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/div/span[3]')
             gold = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[1]')
             silver = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[2]')
             bronze = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[3]')
             total = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[4]')
-            country_info.append(country.text)
-            country_info.append(gold.text)
-            country_info.append(silver.text)
-            country_info.append(bronze.text)
-            country_info.append(total.text)
-            countries_info.append(country_info)
+
+            # Agregar los datos a la lista de países
+            countries_info.append([country.text, gold.text, silver.text, bronze.text, total.text])
+        return countries_info
         
-        self.write_countries_csv(countries_info, "test/csv_student/total_medals.csv")
+    def find_top_n_sports_from(self, country: str, n:int) -> list:
+        # De momento solo funciona para los primeros 8 países por temas de scroll.
+        self.chrome.load_page('https://olympics.com/')
+        print("Página cargada\n")
+        print("durmiendo 1s")
+        sleep(1)
 
+        print("seleccionando coockies")
+        # trata de aceptar coockies si existe:
+        try:
+            self.chrome.click_element('//*[@id="onetrust-accept-btn-handler"]')
+        except:
+            pass
 
-    def find_by_alphabetical_order(self, quantity: int) -> None:
-        self.chrome.click_element('//*[@id="onetrust-accept-btn-handler"]')
+        print("ir a tablas de medallas") 
         self.chrome.click_element('//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
-        self.chrome.driver.execute_script("window.scrollTo(0, 100);")
-        self.chrome.click_element('//*[@id="p2024-main-content"]/div[1]/div[1]/div/div[1]/div[2]/div[1]/div[1]')
-        sleep(5)  
-        self.chrome.click_element('/html/body/div[4]/div[1]/div[3]')
-        countries_info = []
 
-        xpath_father = '/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/'
-        self.chrome.driver.execute_script("window.scrollTo(0, 400);")
+        print("Click en botón de filtro")
+        self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
 
-        for index in range(1, quantity+1):
-            country_info = []
-            sleep(5)
-            country = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/div/span[3]')
-            gold = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[1]')
-            silver = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[2]')
-            bronze = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[3]')
-            total = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[4]')
-            country_info.append(country.text)
-            country_info.append(gold.text)
-            country_info.append(silver.text)
-            country_info.append(bronze.text)
-            country_info.append(total.text)
-            countries_info.append(country_info)
+        print("Click en filtro pais")
+        self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[1]/button/div[2]')
+
+        # Tratar de buscar el país, y si no se encuentra, imprimir que no se encontró:
+        print("Click en el país")
+        self.chrome.click_element(f"//div[@role='option' and contains(text(), '{country}')]")
+
+        print("Click en botón +")
+        self.chrome.click_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div') # click en boton +
+
+        print("Esperando 1s")
+        sleep(1)
         
-        self.write_countries_csv(countries_info, "test/csv_student/alphabetical_order.csv")
+        xpath_father = '/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]'
+
+        sports_info = []
+        quantity = n
+
+        for i in range(1, quantity+1):
+            try:
+                print("Deporte ", i)
+                sport = self.chrome.find_element(f'{xpath_father}/div[{i}]/span[1]')
+                gold = self.chrome.find_element(f'{xpath_father}/div[{i}]/span[2]')
+                silver = self.chrome.find_element(f'{xpath_father}/div[{i}]/span[3]')
+                bronze = self.chrome.find_element(f'{xpath_father}/div[{i}]/span[4]')
+                total = self.chrome.find_element(f'{xpath_father}/div[{i}]/span[5]')
+                
+                sports_info.append([sport.text, gold.text, silver.text, bronze.text, total.text])
+            except:
+                break
+
+        return sports_info
+
+    def find_first_athlete_from(self, countries: list, sport: str) -> list:
+        # De momento solo funciona para los primeros 8 países por temas de scroll.
+        self.chrome.load_page('https://olympics.com/')
+        print("Página cargada\n")
+        print("durmiendo 2s")
+        sleep(1)
+
+        print("seleccionando coockies")
+        # trata de aceptar coockies si existe:
+        try:
+            self.chrome.click_element('//*[@id="onetrust-accept-btn-handler"]')
+        except:
+            pass
+
+
+        print("ir a tablas de medallas") 
+        self.chrome.click_element('//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
+
+        print("Click en botón de filtro")
+        self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
+        
+        athlete_info = []
+        
+        for country in countries:
+            print(f'País a buscar: {country}')
+
+
+            print("Click en filtro pais")
+            self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[1]/button/div[2]')
+
+            # Tratar de buscar el país, y si no se encuentra, imprimir que no se encontró:
+            print("Click en el país")
+            self.chrome.click_element(f"//div[@role='option' and contains(text(), '{country}')]")
+
+            print("Click en filtro deporte")
+            self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[3]/button')
+
+            # Tratar de buscar el país, y si no se encuentra, imprimir que no se encontró:
+            print("Click en el deporte")
+            self.chrome.click_element(f"//div[@role='option' and contains(text(), '{sport}')]")
+
+            try:
+                print("Click en botón +")
+                self.chrome.click_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div') # click en boton +
+
+                print("Click en segundo botón +")
+                self.chrome.click_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]')
+
+            except:
+                pass
+
+            print("Esperando 1s")
+            sleep(1)
+                    
+            # Extraer información
+            try:
+                name = self.chrome.find_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div[1]/div/a').text
+                category = self.chrome.find_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div[1]/a').text
+                medal = self.chrome.find_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div[2]/div/span').text
+
+                print("Categoría: ", category)
+                print("Nombre: ", name)
+                print("Medalla: ", medal)
+
+                athlete_info.append([name, category, medal, country, sport])
+
+            except:
+                pass
+        
+        return athlete_info
 
         
+
 
     def write_countries_csv(self, info: list, filename: str) -> None:
-        header = "COUNTRY;GOLDS;SILVERS;BRONZES;TOTAL\n"
+        header = "PAIS;OROS;PLATAS;BRONCES;TOTAL\n"
 
         with open(filename, mode='w', newline='', encoding='utf-8') as file:
             file.write(header)
             for country in info:
-                file.write(f"{country[0].upper()};{country[1]};{country[2]};{country[3]};{country[4]}\n")
+                file.write(f"{country[0].upper};{country[1]};{country[2]};{country[3]};{country[4]}\n")
             file.close()
 
         print(f"Se ha creado el archivo {filename}\n")
 
-    def find_top_medallists(self, country: str, sport: str, quantity: int) -> list:
-        self.chrome.click_element('//*[@id="onetrust-accept-btn-handler"]')
-        self.chrome.click_element('//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
-        self.chrome.click_element('//*[@id="paris2024-header"]/div/div[3]/a[2]')
-        self.chrome.click_element('//*[@id="p2024-main-content"]/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
-        self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[1]/button')
-        self.chrome.click_element(f"//div[@role='option' and contains(text(), '{country}')]")
-        self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[3]/button')
-        self.chrome.click_element(f"//div[@role='option' and contains(text(), '{sport}')]")
+    # Función genérica para escribir en un archivo CSV
+    def write_csv(self, filename: str, header: str, info: list) -> None:
+        with open(f'test/csv_student/{filename}', mode='w', newline='', encoding='utf-8') as file:
+            # Escribir el encabezado
+            file.write(header + "\n")
 
-        sleep(2)
+            # Contar cuántas columnas hay en el encabezado
+            num_columns = len(header.split(";"))
 
-        medallists_info = []
+            # Escribir cada fila de datos
+            for data in info:
+                # Asegurarse de que el número de elementos en la fila coincide con el número de columnas
+                row_data = ";".join(str(data[i]) if i < len(data) else "" for i in range(num_columns))
+                file.write(row_data + "\n")
 
-        for i in range(1, quantity + 1):
-            medallist = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/div[2]/span')
-            gold = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[1]')
-            silver = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[2]')
-            bronze =  self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[3]')
-            total = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[4]')
-            medallists_info.append([medallist.text, gold.text, silver.text, bronze.text, total.text])
-
-        return medallists_info
-
-    def find_top_medallists_gender(self, gender: str, quantity: int) -> list:
-
-        self.chrome.click_element('//*[@id="onetrust-accept-btn-handler"]')
-        self.chrome.click_element('//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
-        self.chrome.click_element('//*[@id="paris2024-header"]/div/div[3]/a[2]')
-        self.chrome.click_element('//*[@id="p2024-main-content"]/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
-        self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[7]/button')
-
-        self.chrome.click_element(f"//div[@role='option' and text()='{gender}']")
-
-        sleep(2)
-
-        medallists_info = []
-
-        for i in range(1, quantity + 1):
-            medallist = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/div[2]/span')
-            gold = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[1]')
-            silver = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[2]')
-            bronze =  self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[3]')
-            total = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[4]')
-            medallists_info.append([medallist.text, gold.text, silver.text, bronze.text, total.text])
-
-
-        return medallists_info
-
-    def write_medallists_csv(self, info: list, filename: str) -> None:
-        header = "DEPORTISTA,OROS,PLATAS,BRONCES,TOTAL"
-        with open(f'test/csv_student/{filename}', mode='w', encoding='utf-8') as file: 
-            print(header, file=file)
-            for medallist in info:
-                print(f"{medallist[0]},{medallist[1]},{medallist[2]},{medallist[3]},{medallist[4]}", file=file)
-
-        print(f"Se ha creado el archivo {filename}")
-
-        
+        print(f"Se ha creado el archivo {filename}\n")
