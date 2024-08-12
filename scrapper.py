@@ -99,7 +99,7 @@ class Scrapper:
 
         return sports_info
 
-    def find_first_athlete_from(self, country: str, sport: str) -> list:
+    def find_first_athlete_from(self, countries: list, sport: str) -> list:
         # De momento solo funciona para los primeros 8 países por temas de scroll.
         self.chrome.load_page('https://olympics.com/')
         print("Página cargada\n")
@@ -117,54 +117,58 @@ class Scrapper:
         print("ir a tablas de medallas") 
         self.chrome.click_element('//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
 
-        athlete_info = []
-        
         print("Click en botón de filtro")
         self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
-
-        print("Click en filtro pais")
-        self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[1]/button/div[2]')
-
-        # Tratar de buscar el país, y si no se encuentra, imprimir que no se encontró:
-        print("Click en el país")
-        self.chrome.click_element(f"//div[@role='option' and contains(text(), '{country}')]")
-
-        print("Click en filtro deporte")
-        self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[3]/button')
-
-        # Tratar de buscar el país, y si no se encuentra, imprimir que no se encontró:
-        print("Click en el deporte")
-        self.chrome.click_element(f"//div[@role='option' and contains(text(), '{sport}')]")
-
-        try:
-            print("Click en botón +")
-            self.chrome.click_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div') # click en boton +
-
-            print("Click en segundo botón +")
-            self.chrome.click_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]')
-
-        except:
-            pass
-
-
-        print("Esperando 5s")
-        sleep(5)
-    
         
-        # Extraer información
-        try:
-            category = self.chrome.find_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div[1]/a').text
-            name = self.chrome.find_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div[1]/div/a').text
-            medal = self.chrome.find_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div[2]/div/span').text
+        athlete_info = []
+        
+        for country in countries:
+            print(f'País a buscar: {country}')
 
-            print("Categoría: ", category)
-            print("Nombre: ", name)
-            print("Medalla: ", medal)
 
-            athlete_info.append([category, name, medal, country, sport])
+            print("Click en filtro pais")
+            self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[1]/button/div[2]')
 
-        except:
-            pass
+            # Tratar de buscar el país, y si no se encuentra, imprimir que no se encontró:
+            print("Click en el país")
+            self.chrome.click_element(f"//div[@role='option' and contains(text(), '{country}')]")
+
+            print("Click en filtro deporte")
+            self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[3]/button')
+
+            # Tratar de buscar el país, y si no se encuentra, imprimir que no se encontró:
+            print("Click en el deporte")
+            self.chrome.click_element(f"//div[@role='option' and contains(text(), '{sport}')]")
+
+            try:
+                print("Click en botón +")
+                self.chrome.click_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div') # click en boton +
+
+                print("Click en segundo botón +")
+                self.chrome.click_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]')
+
+            except:
+                pass
+
+
+            print("Esperando 5s")
+            sleep(5)
+        
+            
+            # Extraer información
+            try:
+                category = self.chrome.find_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div[1]/a').text
+                name = self.chrome.find_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div[1]/div/a').text
+                medal = self.chrome.find_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div[2]/div/span').text
+
+                print("Categoría: ", category)
+                print("Nombre: ", name)
+                print("Medalla: ", medal)
+
+                athlete_info.append([category, name, medal, country, sport])
+
+            except:
+                pass
         
         return athlete_info
         

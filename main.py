@@ -18,9 +18,9 @@ def execute_scrapping():
     # print(sports)
 
     # Test 3
-    country = 'Chile'
+    countries = ['United States of America', 'Chile', 'Japan']
     sport = 'Athletics'
-    results = scrapper.find_first_athlete_from(country, sport)
+    results = scrapper.find_first_athlete_from(countries, sport)
     print(results)
 
 
