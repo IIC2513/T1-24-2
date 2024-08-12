@@ -35,7 +35,6 @@ class ScraperTest(unittest.TestCase):
         self.assertTrue(base_content.columns.equals(student_content.columns), "Header incorrecto")
         self.assertTrue(base_content.equals(student_content), "Los archivos no son iguales")   
 
-
     def test_top_n_sports_from(self):
             
             country = 'Chile'
@@ -52,7 +51,6 @@ class ScraperTest(unittest.TestCase):
     
             self.assertTrue(base_content.columns.equals(student_content.columns), "Header incorrecto")
             self.assertTrue(base_content.equals(student_content), "Los archivos no son iguales")
-
 
     def test_first_athlete_from_countries(self):
             

@@ -19,12 +19,12 @@ class Scrapper:
         print("seleccionando coockies")
         # trata de aceptar coockies si existe:
         try:
-            self.chrome.click_element('//*[@id="onetrust-accept-btn-handler"]')
+            self.chrome.click_element(By.XPATH, By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
         except:
             pass
 
         print("ir a tablas de medallas") 
-        self.chrome.click_element('//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
+        self.chrome.click_element(By.XPATH, '//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
 
         #Hacer scroll hasta el elemento con Xpath = /html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div[8]/div/div/div
         print("Haciendo scroll para cargar info necesaria")
@@ -38,11 +38,11 @@ class Scrapper:
         for index in range(1, quantity+1):
             print(index)
 
-            country = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/div/span[3]')
-            gold = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[1]')
-            silver = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[2]')
-            bronze = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[3]')
-            total = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[4]')
+            country = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/div/span[3]')
+            gold = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[1]')
+            silver = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[2]')
+            bronze = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[3]')
+            total = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[4]')
 
             # Agregar los datos a la lista de países
             countries_info.append([country.text, gold.text, silver.text, bronze.text, total.text])
@@ -58,25 +58,25 @@ class Scrapper:
         print("seleccionando coockies")
         # trata de aceptar coockies si existe:
         try:
-            self.chrome.click_element('//*[@id="onetrust-accept-btn-handler"]')
+            self.chrome.click_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
         except:
             pass
 
         print("ir a tablas de medallas") 
-        self.chrome.click_element('//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
+        self.chrome.click_element(By.XPATH, '//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
 
         print("Click en botón de filtro")
-        self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
+        self.chrome.click_element(By.XPATH, '/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
 
         print("Click en filtro pais")
-        self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[1]/button/div[2]')
+        self.chrome.click_element(By.XPATH, '/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[1]/button/div[2]')
 
         # Tratar de buscar el país, y si no se encuentra, imprimir que no se encontró:
         print("Click en el país")
-        self.chrome.click_element(f"//div[@role='option' and contains(text(), '{country}')]")
+        self.chrome.click_element(By.XPATH, f"//div[@role='option' and contains(text(), '{country}')]")
 
         print("Click en botón +")
-        self.chrome.click_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div') # click en boton +
+        self.chrome.click_element(By.XPATH, f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div') # click en boton +
 
         print("Esperando 1s")
         sleep(1)
@@ -89,11 +89,11 @@ class Scrapper:
         for i in range(1, quantity+1):
             try:
                 print("Deporte ", i)
-                sport = self.chrome.find_element(f'{xpath_father}/div[{i}]/span[1]')
-                gold = self.chrome.find_element(f'{xpath_father}/div[{i}]/span[2]')
-                silver = self.chrome.find_element(f'{xpath_father}/div[{i}]/span[3]')
-                bronze = self.chrome.find_element(f'{xpath_father}/div[{i}]/span[4]')
-                total = self.chrome.find_element(f'{xpath_father}/div[{i}]/span[5]')
+                sport = self.chrome.find_element(By.XPATH, f'{xpath_father}/div[{i}]/span[1]')
+                gold = self.chrome.find_element(By.XPATH, f'{xpath_father}/div[{i}]/span[2]')
+                silver = self.chrome.find_element(By.XPATH, f'{xpath_father}/div[{i}]/span[3]')
+                bronze = self.chrome.find_element(By.XPATH, f'{xpath_father}/div[{i}]/span[4]')
+                total = self.chrome.find_element(By.XPATH, f'{xpath_father}/div[{i}]/span[5]')
                 
                 sports_info.append([sport.text, gold.text, silver.text, bronze.text, total.text])
             except:
@@ -111,16 +111,16 @@ class Scrapper:
         print("seleccionando coockies")
         # trata de aceptar coockies si existe:
         try:
-            self.chrome.click_element('//*[@id="onetrust-accept-btn-handler"]')
+            self.chrome.click_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
         except:
             pass
 
 
         print("ir a tablas de medallas") 
-        self.chrome.click_element('//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
+        self.chrome.click_element(By.XPATH, '//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
 
         print("Click en botón de filtro")
-        self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
+        self.chrome.click_element(By.XPATH, '/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
         
         athlete_info = []
         
@@ -129,25 +129,25 @@ class Scrapper:
 
 
             print("Click en filtro pais")
-            self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[1]/button/div[2]')
+            self.chrome.click_element(By.XPATH, '/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[1]/button/div[2]')
 
             # Tratar de buscar el país, y si no se encuentra, imprimir que no se encontró:
             print("Click en el país")
-            self.chrome.click_element(f"//div[@role='option' and contains(text(), '{country}')]")
+            self.chrome.click_element(By.XPATH, f"//div[@role='option' and contains(text(), '{country}')]")
 
             print("Click en filtro deporte")
-            self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[3]/button')
+            self.chrome.click_element(By.XPATH, '/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[3]/button')
 
             # Tratar de buscar el país, y si no se encuentra, imprimir que no se encontró:
             print("Click en el deporte")
-            self.chrome.click_element(f"//div[@role='option' and contains(text(), '{sport}')]")
+            self.chrome.click_element(By.XPATH, f"//div[@role='option' and contains(text(), '{sport}')]")
 
             try:
                 print("Click en botón +")
-                self.chrome.click_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div') # click en boton +
+                self.chrome.click_element(By.XPATH, f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div') # click en boton +
 
                 print("Click en segundo botón +")
-                self.chrome.click_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]')
+                self.chrome.click_element(By.XPATH, f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]')
 
             except:
                 pass
@@ -157,9 +157,9 @@ class Scrapper:
                     
             # Extraer información
             try:
-                name = self.chrome.find_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div[1]/div/a').text
-                category = self.chrome.find_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div[1]/a').text
-                medal = self.chrome.find_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div[2]/div/span').text
+                name = self.chrome.find_element(By.XPATH, '/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div[1]/div/a').text
+                category = self.chrome.find_element(By.XPATH, '/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div[1]/a').text
+                medal = self.chrome.find_element(By.XPATH, '/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div[2]/div/span').text
 
                 print("Categoría: ", category)
                 print("Nombre: ", name)
@@ -173,12 +173,12 @@ class Scrapper:
         return athlete_info
         
     def find_by_total_medals(self, quantity: int) -> None:
-        self.chrome.click_element('//*[@id="onetrust-accept-btn-handler"]')
-        self.chrome.click_element('//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
+        self.chrome.click_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
+        self.chrome.click_element(By.XPATH, '//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
         self.chrome.driver.execute_script("window.scrollTo(0, 100);")
-        self.chrome.click_element('//*[@id="p2024-main-content"]/div[1]/div[1]/div/div[1]/div[2]/div[1]/div[1]')
+        self.chrome.click_element(By.XPATH, '//*[@id="p2024-main-content"]/div[1]/div[1]/div/div[1]/div[2]/div[1]/div[1]')
         sleep(5)  
-        self.chrome.click_element('/html/body/div[4]/div[1]/div[2]')
+        self.chrome.click_element(By.XPATH, '/html/body/div[4]/div[1]/div[2]')
         countries_info = []
 
         xpath_father = '/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/'
@@ -187,11 +187,11 @@ class Scrapper:
         for index in range(1, quantity+1):
             country_info = []
             sleep(5)
-            country = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/div/span[3]')
-            gold = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[1]')
-            silver = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[2]')
-            bronze = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[3]')
-            total = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[4]')
+            country = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/div/span[3]')
+            gold = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[1]')
+            silver = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[2]')
+            bronze = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[3]')
+            total = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[4]')
             country_info.append(country.text)
             country_info.append(gold.text)
             country_info.append(silver.text)
@@ -202,12 +202,12 @@ class Scrapper:
         self.write_countries_csv(countries_info, "test/csv_student/total_medals.csv")
 
     def find_by_alphabetical_order(self, quantity: int) -> None:
-        self.chrome.click_element('//*[@id="onetrust-accept-btn-handler"]')
-        self.chrome.click_element('//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
+        self.chrome.click_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
+        self.chrome.click_element(By.XPATH, '//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
         self.chrome.driver.execute_script("window.scrollTo(0, 100);")
-        self.chrome.click_element('//*[@id="p2024-main-content"]/div[1]/div[1]/div/div[1]/div[2]/div[1]/div[1]')
+        self.chrome.click_element(By.XPATH, '//*[@id="p2024-main-content"]/div[1]/div[1]/div/div[1]/div[2]/div[1]/div[1]')
         sleep(5)  
-        self.chrome.click_element('/html/body/div[4]/div[1]/div[3]')
+        self.chrome.click_element(By.XPATH, '/html/body/div[4]/div[1]/div[3]')
         countries_info = []
 
         xpath_father = '/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/'
@@ -216,11 +216,11 @@ class Scrapper:
         for index in range(1, quantity+1):
             country_info = []
             sleep(5)
-            country = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/div/span[3]')
-            gold = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[1]')
-            silver = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[2]')
-            bronze = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[3]')
-            total = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[4]')
+            country = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/div/span[3]')
+            gold = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[1]')
+            silver = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[2]')
+            bronze = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[3]')
+            total = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[4]')
             country_info.append(country.text)
             country_info.append(gold.text)
             country_info.append(silver.text)
@@ -231,49 +231,49 @@ class Scrapper:
         self.write_countries_csv(countries_info, "test/csv_student/alphabetical_order.csv")
 
     def find_top_medallists(self, country: str, sport: str, quantity: int) -> list:
-        self.chrome.click_element('//*[@id="onetrust-accept-btn-handler"]')
-        self.chrome.click_element('//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
-        self.chrome.click_element('//*[@id="paris2024-header"]/div/div[3]/a[2]')
-        self.chrome.click_element('//*[@id="p2024-main-content"]/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
-        self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[1]/button')
-        self.chrome.click_element(f"//div[@role='option' and contains(text(), '{country}')]")
-        self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[3]/button')
-        self.chrome.click_element(f"//div[@role='option' and contains(text(), '{sport}')]")
+        self.chrome.click_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
+        self.chrome.click_element(By.XPATH, '//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
+        self.chrome.click_element(By.XPATH, '//*[@id="paris2024-header"]/div/div[3]/a[2]')
+        self.chrome.click_element(By.XPATH, '//*[@id="p2024-main-content"]/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
+        self.chrome.click_element(By.XPATH, '/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[1]/button')
+        self.chrome.click_element(By.XPATH, f"//div[@role='option' and contains(text(), '{country}')]")
+        self.chrome.click_element(By.XPATH, '/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[3]/button')
+        self.chrome.click_element(By.XPATH, f"//div[@role='option' and contains(text(), '{sport}')]")
 
         sleep(2)
 
         medallists_info = []
 
         for i in range(1, quantity + 1):
-            medallist = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/div[2]/span')
-            gold = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[1]')
-            silver = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[2]')
-            bronze =  self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[3]')
-            total = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[4]')
+            medallist = self.chrome.find_element(By.XPATH, f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/div[2]/span')
+            gold = self.chrome.find_element(By.XPATH, f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[1]')
+            silver = self.chrome.find_element(By.XPATH, f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[2]')
+            bronze =  self.chrome.find_element(By.XPATH, f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[3]')
+            total = self.chrome.find_element(By.XPATH, f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[4]')
             medallists_info.append([medallist.text, gold.text, silver.text, bronze.text, total.text])
 
         return medallists_info
     
     def find_top_medallists_gender(self, gender: str, quantity: int) -> list:
 
-        self.chrome.click_element('//*[@id="onetrust-accept-btn-handler"]')
-        self.chrome.click_element('//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
-        self.chrome.click_element('//*[@id="paris2024-header"]/div/div[3]/a[2]')
-        self.chrome.click_element('//*[@id="p2024-main-content"]/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
-        self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[7]/button')
+        self.chrome.click_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
+        self.chrome.click_element(By.XPATH, '//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
+        self.chrome.click_element(By.XPATH, '//*[@id="paris2024-header"]/div/div[3]/a[2]')
+        self.chrome.click_element(By.XPATH, '//*[@id="p2024-main-content"]/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
+        self.chrome.click_element(By.XPATH, '/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[7]/button')
 
-        self.chrome.click_element(f"//div[@role='option' and text()='{gender}']")
+        self.chrome.click_element(By.XPATH, f"//div[@role='option' and text()='{gender}']")
 
         sleep(2)
 
         medallists_info = []
 
         for i in range(1, quantity + 1):
-            medallist = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/div[2]/span')
-            gold = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[1]')
-            silver = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[2]')
-            bronze =  self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[3]')
-            total = self.chrome.find_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[4]')
+            medallist = self.chrome.find_element(By.XPATH, f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/div[2]/span')
+            gold = self.chrome.find_element(By.XPATH, f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[1]')
+            silver = self.chrome.find_element(By.XPATH, f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[2]')
+            bronze =  self.chrome.find_element(By.XPATH, f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[3]')
+            total = self.chrome.find_element(By.XPATH, f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[4]')
             medallists_info.append([medallist.text, gold.text, silver.text, bronze.text, total.text])
 
 

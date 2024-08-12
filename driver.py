@@ -8,11 +8,12 @@ from time import sleep
 
 class Driver:
 
-    def __init__(self, activate_sesion=False):
+    def __init__(self):
         self.options = Options()
         self.driver = None
 
     def initialize_driver(self) -> None:
+        # En caso que no cuenten con el driver de Chrome, deben descomentar esta linea
         # self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
         self.driver = webdriver.Chrome()
         self.driver.delete_all_cookies()
@@ -22,29 +23,22 @@ class Driver:
         self.driver.get(page)
         sleep(5)
 
-    def click_element(self, xpath: str) -> None:
+    def click_element(self, by: str, xpath: str) -> None:
         sleep(1)
-        element = self.driver.find_element(by=By.XPATH, value=xpath)
+        element = self.driver.find_element(by=by, value=xpath)
         element.click()
 
-    def find_element(self, xpath: str) -> WebElement:
-        return self.driver.find_element(by=By.XPATH, value=xpath)
+    def find_element(self, by: str, xpath: str) -> WebElement:
+        return self.driver.find_element(by=by, value=xpath)
     
-    def scroll_to_element(self, xpath: str) -> None:
-        element = self.find_element(xpath)
+    def scroll_to_element(self, by: str, xpath: str) -> None:
+        element = self.find_element(by, xpath)
         self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
         sleep(5)
-
-    def scroll_to_element(self, xpath: str) -> None:
-        element = self.find_element(xpath)
-        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
-        sleep(1)  # Espera para asegurar que el scroll ha tenido efecto
 
     def close(self) -> None:
         self.driver.quit()
         self.driver = None
-
-
 
 if __name__ == '__main__':
     chrome = Driver()
