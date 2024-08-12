@@ -13,9 +13,16 @@ def execute_scrapping():
     # print(countries)
     
     # Test 2
+    # country = 'Chile'
+    # sports = scrapper.find_top_n_sports_from(country, 3)
+    # print(sports)
+
+    # Test 3
     country = 'Chile'
-    sports = scrapper.find_top_n_sports_from(country, 3)
-    print(sports)
+    sport = 'Athletics'
+    results = scrapper.find_first_athlete_from(country, sport)
+    print(results)
+
 
     chrome_.close()
     print("Fin del programa")
