@@ -29,6 +29,11 @@ class Driver:
 
     def find_element(self, xpath: str) -> WebElement:
         return self.driver.find_element(by=By.XPATH, value=xpath)
+    
+    def scroll_to_element(self, xpath: str) -> None:
+        element = self.find_element(xpath)
+        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
+        sleep(5)
 
     def close(self) -> None:
         self.driver.quit()

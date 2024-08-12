@@ -7,7 +7,8 @@ def execute_scrapping():
     chrome_.load_page('https://olympics.com/')
 
     scrapper = Scrapper(chrome_)
-    scrapper.find_by_total_medals(2)
+    scrapper.find_by_total_medals(12)
+    #scrapper.find_by_alphabetical_order(25)
     # info_pokemons = scrapper.extract_pokemon_info(list_pokemons)
     # sorted_info = scrapper.sort_by_weight(info_pokemons)
 
