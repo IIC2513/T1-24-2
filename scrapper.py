@@ -49,8 +49,8 @@ class Scrapper:
             countries_info.append([country.text, gold.text, silver.text, bronze.text, total.text])
         return countries_info
         
-    def find_top_3_sports_from(self, country: str) -> list:
-
+    def find_top_n_sports_from(self, country: str, n:int) -> list:
+        # De momento solo funciona para los primeros 8 países por temas de scroll.
         self.chrome.load_page('https://olympics.com/')
         print("Página cargada\n")
         print("durmiendo 2s")
@@ -62,48 +62,42 @@ class Scrapper:
         print("ir a tablas de medallas") 
         self.chrome.click_element('//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
 
-        #Hacer scroll hasta el elemento con Xpath = /html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div[8]/div/div/div
-        # print("Haciendo scroll para cargar info necesaria")
-        # self.chrome.scroll_to_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div[8]/div/div/div')
+        print("Click en botón de filtro")
+        self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
 
-        maximum_countries = 91
+        print("Click en filtro pais")
+        self.chrome.click_element('/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[1]/button/div[2]')
 
-        index = 1
-        jump_to_scroll = 8
+        # Tratar de buscar el país, y si no se encuentra, imprimir que no se encontró:
+        print("Click en el país")
+        self.chrome.click_element(f"//div[@role='option' and contains(text(), '{country}')]")
 
-        found = False
-        xpath_father = '/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/'
+        print("Click en botón +")
+        self.chrome.click_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div') # click en boton +
 
+        print("Esperando 5s")
+        sleep(5)
+        
+        xpath_father = '/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]'
 
-        while index <= maximum_countries and not found:
-            print("Indice: ", index)
-            country_name = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/div/span[3]')
-            # si index es divisible por 8, hacer scroll
-            if index % jump_to_scroll == 0:
-                self.chrome.scroll_to_element(f'{xpath_father}div[{index-1}]/div/div/div/div/span[3]')
-                print("Haciendo scroll en while")
-                print("Indice: ", index)
-                sleep(1)
+        sports_info = []
+        quantity = n
 
-            if country_name.text.upper() == country.upper():
-                found = True
-                # info
-                print("Encontrado")
-                gold = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[1]')
-                silver = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[2]')
-                bronze = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[3]')
-                total = self.chrome.find_element(f'{xpath_father}div[{index}]/div/div/div/span[4]')
+        for i in range(1, quantity+1):
+            try:
+                print("Deporte ", i)
+                sport = self.chrome.find_element(f'{xpath_father}/div[{i}]/span[1]')
+                gold = self.chrome.find_element(f'{xpath_father}/div[{i}]/span[2]')
+                silver = self.chrome.find_element(f'{xpath_father}/div[{i}]/span[3]')
+                bronze = self.chrome.find_element(f'{xpath_father}/div[{i}]/span[4]')
+                total = self.chrome.find_element(f'{xpath_father}/div[{i}]/span[5]')
                 
-                print(f"Oros: {gold.text}")
-                print(f"Platas: {silver.text}")
-                print(f"Bronces: {bronze.text}")
-                print(f"Total: {total.text}")
-                
-                sleep(2)
+                sports_info.append([sport.text, gold.text, silver.text, bronze.text, total.text])
+            except Exception as e:
+                print(f"No se encontró el deporte {i} para el país {country}. Error: {e}")
                 break
-            index += 1
 
-        return found
+        return sports_info
 
 
     def write_countries_csv(self, info: list, filename: str) -> None:

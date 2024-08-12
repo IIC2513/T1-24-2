@@ -33,7 +33,7 @@ class Driver:
     def scroll_to_element(self, xpath: str) -> None:
         element = self.find_element(xpath)
         self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
-        sleep(2)  # Espera para asegurar que el scroll ha tenido efecto
+        sleep(1)  # Espera para asegurar que el scroll ha tenido efecto
 
     def close(self) -> None:
         self.driver.quit()
