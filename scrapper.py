@@ -15,11 +15,15 @@ class Scrapper:
     def find_top_10_countries(self) -> list:
         self.chrome.load_page('https://olympics.com/')
         print("Página cargada\n")
-        print("durmiendo 2s")
+        print("durmiendo 1s")
         sleep(1)
 
         print("seleccionando coockies")
-        self.chrome.click_element('//*[@id="onetrust-accept-btn-handler"]')
+        # trata de aceptar coockies si existe:
+        try:
+            self.chrome.click_element('//*[@id="onetrust-accept-btn-handler"]')
+        except:
+            pass
 
         print("ir a tablas de medallas") 
         self.chrome.click_element('//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
@@ -53,11 +57,15 @@ class Scrapper:
         # De momento solo funciona para los primeros 8 países por temas de scroll.
         self.chrome.load_page('https://olympics.com/')
         print("Página cargada\n")
-        print("durmiendo 2s")
+        print("durmiendo 1s")
         sleep(1)
 
         print("seleccionando coockies")
-        self.chrome.click_element('//*[@id="onetrust-accept-btn-handler"]')
+        # trata de aceptar coockies si existe:
+        try:
+            self.chrome.click_element('//*[@id="onetrust-accept-btn-handler"]')
+        except:
+            pass
 
         print("ir a tablas de medallas") 
         self.chrome.click_element('//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
@@ -75,8 +83,8 @@ class Scrapper:
         print("Click en botón +")
         self.chrome.click_element(f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div') # click en boton +
 
-        print("Esperando 5s")
-        sleep(5)
+        print("Esperando 1s")
+        sleep(1)
         
         xpath_father = '/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]'
 
@@ -151,21 +159,21 @@ class Scrapper:
                 pass
 
 
-            print("Esperando 5s")
-            sleep(5)
+            print("Esperando 1s")
+            sleep(1)
         
             
             # Extraer información
             try:
-                category = self.chrome.find_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div[1]/a').text
                 name = self.chrome.find_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div[1]/div/a').text
+                category = self.chrome.find_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div[1]/a').text
                 medal = self.chrome.find_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div[2]/div/span').text
 
                 print("Categoría: ", category)
                 print("Nombre: ", name)
                 print("Medalla: ", medal)
 
-                athlete_info.append([category, name, medal, country, sport])
+                athlete_info.append([name, category, medal, country, sport])
 
             except:
                 pass
@@ -182,5 +190,21 @@ class Scrapper:
             for country in info:
                 file.write(f"{country[0].upper};{country[1]};{country[2]};{country[3]};{country[4]}\n")
             file.close()
+
+        print(f"Se ha creado el archivo {filename}\n")
+
+    def write_csv(self, filename: str, header: str, info: list) -> None:
+        with open(f'test/csv_student/{filename}', mode='w', newline='', encoding='utf-8') as file:
+            # Escribir el encabezado
+            file.write(header + "\n")
+
+            # Contar cuántas columnas hay en el encabezado
+            num_columns = len(header.split(";"))
+
+            # Escribir cada fila de datos
+            for data in info:
+                # Asegurarse de que el número de elementos en la fila coincide con el número de columnas
+                row_data = ";".join(str(data[i]) if i < len(data) else "" for i in range(num_columns))
+                file.write(row_data + "\n")
 
         print(f"Se ha creado el archivo {filename}\n")
