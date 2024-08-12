@@ -3,8 +3,6 @@ from selenium.webdriver.common.keys import Keys
 from driver import Driver
 from time import sleep
 
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 
 class Scrapper:
@@ -35,9 +33,6 @@ class Scrapper:
         countries_info = []
         quantity = 10    # Con hasta 8 funciona, pero 9 y 10 ya no se puede hasta hacer scroll
         
-        #emotion-srm-1a32gjt /html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div
-        #//*[@id="p2024-main-content"]/div[1]/div[2]/div[2]/div/div[2]
-        #/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]
         xpath_father = '/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/'
 
         for index in range(1, quantity+1):
@@ -101,8 +96,7 @@ class Scrapper:
                 total = self.chrome.find_element(f'{xpath_father}/div[{i}]/span[5]')
                 
                 sports_info.append([sport.text, gold.text, silver.text, bronze.text, total.text])
-            except Exception as e:
-                print(f"No se encontró el deporte {i} para el país {country}. Error: {e}")
+            except:
                 break
 
         return sports_info
@@ -158,11 +152,9 @@ class Scrapper:
             except:
                 pass
 
-
             print("Esperando 1s")
             sleep(1)
-        
-            
+                    
             # Extraer información
             try:
                 name = self.chrome.find_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div[1]/div/a').text
@@ -193,6 +185,7 @@ class Scrapper:
 
         print(f"Se ha creado el archivo {filename}\n")
 
+    # Función genérica para escribir en un archivo CSV
     def write_csv(self, filename: str, header: str, info: list) -> None:
         with open(f'test/csv_student/{filename}', mode='w', newline='', encoding='utf-8') as file:
             # Escribir el encabezado
