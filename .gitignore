@@ -1,0 +1,2 @@
+./test/csv_student/*.csv
+__pycache__/
