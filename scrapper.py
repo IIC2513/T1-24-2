@@ -172,7 +172,7 @@ class Scrapper:
         
         return athlete_info
         
-    def find_by_total_medals(self, quantity: int) -> None:
+    def extract_by_total_medals(self, quantity: int) -> list:
         self.chrome.click_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
         self.chrome.click_element(By.XPATH, '//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
         self.chrome.driver.execute_script("window.scrollTo(0, 100);")
@@ -185,23 +185,18 @@ class Scrapper:
         self.chrome.driver.execute_script("window.scrollTo(0, 400);")
 
         for index in range(1, quantity+1):
-            country_info = []
+
             sleep(5)
             country = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/div/span[3]')
             gold = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[1]')
             silver = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[2]')
             bronze = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[3]')
             total = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[4]')
-            country_info.append(country.text)
-            country_info.append(gold.text)
-            country_info.append(silver.text)
-            country_info.append(bronze.text)
-            country_info.append(total.text)
-            countries_info.append(country_info)
+            countries_info.append([country.text, gold.text, silver.text, bronze.text, total.text])
         
-        self.write_countries_csv(countries_info, "test/csv_student/total_medals.csv")
+        return countries_info
 
-    def find_by_alphabetical_order(self, quantity: int) -> None:
+    def extract_by_alphabetical_order(self, quantity: int) -> list:
         self.chrome.click_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
         self.chrome.click_element(By.XPATH, '//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
         self.chrome.driver.execute_script("window.scrollTo(0, 100);")
@@ -214,21 +209,16 @@ class Scrapper:
         self.chrome.driver.execute_script("window.scrollTo(0, 400);")
 
         for index in range(1, quantity+1):
-            country_info = []
+
             sleep(5)
             country = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/div/span[3]')
             gold = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[1]')
             silver = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[2]')
             bronze = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[3]')
             total = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[4]')
-            country_info.append(country.text)
-            country_info.append(gold.text)
-            country_info.append(silver.text)
-            country_info.append(bronze.text)
-            country_info.append(total.text)
-            countries_info.append(country_info)
+            countries_info.append([country.text, gold.text, silver.text, bronze.text, total.text])
         
-        self.write_countries_csv(countries_info, "test/csv_student/alphabetical_order.csv")
+        return countries_info
 
     def find_top_medallists(self, country: str, sport: str, quantity: int) -> list:
         self.chrome.click_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
@@ -278,26 +268,6 @@ class Scrapper:
 
 
         return medallists_info
-
-    def write_countries_csv(self, info: list, filename: str) -> None:
-        header = "COUNTRY;GOLDS;SILVERS;BRONZES;TOTAL\n"
-
-        with open(filename, mode='w', newline='', encoding='utf-8') as file:
-            file.write(header)
-            for country in info:
-                file.write(f"{country[0].upper()};{country[1]};{country[2]};{country[3]};{country[4]}\n")
-            file.close()
-
-        print(f"Se ha creado el archivo {filename}\n")
-
-    def write_medallists_csv(self, info: list, filename: str) -> None:
-        header = "DEPORTISTA,OROS,PLATAS,BRONCES,TOTAL"
-        with open(f'test/csv_student/{filename}', mode='w', encoding='utf-8') as file: 
-            print(header, file=file)
-            for medallist in info:
-                print(f"{medallist[0]},{medallist[1]},{medallist[2]},{medallist[3]},{medallist[4]}", file=file)
-
-        print(f"Se ha creado el archivo {filename}")
 
     # Función genérica para escribir en un archivo CSV
     def write_csv(self, filename: str, header: str, info: list) -> None:
