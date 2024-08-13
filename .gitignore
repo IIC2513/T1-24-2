@@ -1,2 +1,3 @@
 ./test/csv_student/*.csv
+/test/csv_student/*.csv
 __pycache__/
