@@ -19,7 +19,7 @@ class Scrapper:
         print("seleccionando coockies")
         # trata de aceptar coockies si existe:
         try:
-            self.chrome.click_element(By.XPATH, By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
+            self.chrome.click_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
         except:
             pass
 
@@ -28,7 +28,7 @@ class Scrapper:
 
         #Hacer scroll hasta el elemento con Xpath = /html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div[8]/div/div/div
         print("Haciendo scroll para cargar info necesaria")
-        self.chrome.scroll_to_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div[8]/div/div/div')
+        self.chrome.scroll_to_element(By.XPATH, '/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div[8]/div/div/div')
 
         countries_info = []
         quantity = 10    # Con hasta 8 funciona, pero 9 y 10 ya no se puede hasta hacer scroll
@@ -172,7 +172,7 @@ class Scrapper:
         
         return athlete_info
         
-    def find_by_total_medals(self, quantity: int) -> None:
+    def extract_by_total_medals(self, quantity: int) -> list:
         self.chrome.click_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
         self.chrome.click_element(By.XPATH, '//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
         self.chrome.driver.execute_script("window.scrollTo(0, 100);")
@@ -185,23 +185,18 @@ class Scrapper:
         self.chrome.driver.execute_script("window.scrollTo(0, 400);")
 
         for index in range(1, quantity+1):
-            country_info = []
+
             sleep(5)
             country = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/div/span[3]')
             gold = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[1]')
             silver = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[2]')
             bronze = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[3]')
             total = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[4]')
-            country_info.append(country.text)
-            country_info.append(gold.text)
-            country_info.append(silver.text)
-            country_info.append(bronze.text)
-            country_info.append(total.text)
-            countries_info.append(country_info)
+            countries_info.append([country.text, gold.text, silver.text, bronze.text, total.text])
         
-        self.write_countries_csv(countries_info, "test/csv_student/total_medals.csv")
+        return countries_info
 
-    def find_by_alphabetical_order(self, quantity: int) -> None:
+    def extract_by_alphabetical_order(self, quantity: int) -> list:
         self.chrome.click_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
         self.chrome.click_element(By.XPATH, '//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
         self.chrome.driver.execute_script("window.scrollTo(0, 100);")
@@ -214,21 +209,16 @@ class Scrapper:
         self.chrome.driver.execute_script("window.scrollTo(0, 400);")
 
         for index in range(1, quantity+1):
-            country_info = []
+
             sleep(5)
             country = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/div/span[3]')
             gold = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[1]')
             silver = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[2]')
             bronze = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[3]')
             total = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[4]')
-            country_info.append(country.text)
-            country_info.append(gold.text)
-            country_info.append(silver.text)
-            country_info.append(bronze.text)
-            country_info.append(total.text)
-            countries_info.append(country_info)
+            countries_info.append([country.text, gold.text, silver.text, bronze.text, total.text])
         
-        self.write_countries_csv(countries_info, "test/csv_student/alphabetical_order.csv")
+        return countries_info
 
     def find_top_medallists(self, country: str, sport: str, quantity: int) -> list:
         self.chrome.click_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')

@@ -100,22 +100,24 @@ class ScraperTest(unittest.TestCase):
 
         self.assertTrue(base_content.equals(student_content), 'Los archivos no son iguales')
 
-    def test_find_countries_by_total_medals(self):
-        self.scrapper.find_by_total_medals(3)
-
-        base_content = pd.read_csv('test/csv_base/total_medals.csv')
+    def test_extract_countries_by_total_medals(self):
+        countries = self.scrapper.extract_by_total_medals(3)
+        header = 'COUNTRY;GOLDS;SILVERS;BRONZES;TOTAL'
+        self.scrapper.write_csv('total_medals.csv', header, countries)
+        base_content = pd.read_csv("test/csv_base/total_medals.csv")
 
         try:
             student_content = pd.read_csv('test/csv_student/total_medals.csv')
         except:
             self.fail('No se creó el archivo total_medals.csv')
         
-        self.assertTrue(base_content.equals(student_content), 'Los archivos no son iguales')
+        self.assertTrue(base_content.equals(student_content), "Los archivos no son iguales")
     
-    def test_find_countries_by_alphabetical_order(self):
-        self.scrapper.find_by_alphabetical_order(3)
-
-        base_content = pd.read_csv('test/csv_base/alphabetical_order.csv')
+    def test_extract_countries_by_alphabetical_order(self):
+        countries = self.scrapper.extract_by_alphabetical_order(3)
+        header = 'COUNTRY;GOLDS;SILVERS;BRONZES;TOTAL'
+        self.scrapper.write_csv('alphabetical_order.csv', header, countries)
+        base_content = pd.read_csv("test/csv_base/alphabetical_order.csv")
 
         try:
             student_content = pd.read_csv('test/csv_student/alphabetical_order.csv')
