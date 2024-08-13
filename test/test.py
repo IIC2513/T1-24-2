@@ -110,7 +110,6 @@ class ScraperTest(unittest.TestCase):
         except:
             self.fail("No se creó el archivo total_medals.csv")
         
-        self.assertTrue(base_content.columns.equals(student_content.columns), "Header incorrecto")
         self.assertTrue(base_content.equals(student_content), "Los archivos no son iguales")
     
     def test_extract_countries_by_alphabetical_order(self):
@@ -124,7 +123,6 @@ class ScraperTest(unittest.TestCase):
         except:
             self.fail("No se creó el archivo alphabetical_order.csv")
         
-        self.assertTrue(base_content.columns.equals(student_content.columns), "Header incorrecto")
         self.assertTrue(base_content.equals(student_content), "Los archivos no son iguales")
         
 
