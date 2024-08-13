@@ -19,7 +19,7 @@ class Scrapper:
         print("seleccionando coockies")
         # trata de aceptar coockies si existe:
         try:
-            self.chrome.click_element(By.XPATH, By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
+            self.chrome.click_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
         except:
             pass
 
@@ -28,7 +28,7 @@ class Scrapper:
 
         #Hacer scroll hasta el elemento con Xpath = /html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div[8]/div/div/div
         print("Haciendo scroll para cargar info necesaria")
-        self.chrome.scroll_to_element('/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div[8]/div/div/div')
+        self.chrome.scroll_to_element(By.XPATH, '/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div[8]/div/div/div')
 
         countries_info = []
         quantity = 10    # Con hasta 8 funciona, pero 9 y 10 ya no se puede hasta hacer scroll
