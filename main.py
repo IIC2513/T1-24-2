@@ -23,7 +23,7 @@ def execute_scrapping():
 
     # TEST 1
     if n == 1:
-        countries = scrapper.find_top_10_countries()
+        countries = scrapper.extract_top_10_countries()
         header = 'COUNTRY;GOLD;SILVER;BRONZE;TOTAL'
         scrapper.write_csv('top_10_countries.csv', header, countries)
         print(countries)
@@ -32,7 +32,7 @@ def execute_scrapping():
     elif n == 2:
 
         country = 'Chile'
-        sports = scrapper.find_top_n_sports_from(country, 3)
+        sports = scrapper.extract_top_n_sports_from(country, 3)
         header = 'SPORT;GOLD;SILVER;BRONZE;TOTAL'
         scrapper.write_csv('top_n_sports_from_country.csv', header, sports)
         print(sports)
@@ -42,7 +42,7 @@ def execute_scrapping():
         countries = ['United States of America', 'Chile', 'Japan']
         sport = 'Athletics'
         header = 'NAME;CATEGORY;MEDAL;COUNTRY;SPORT'
-        results = scrapper.find_first_athlete_from(countries, sport)
+        results = scrapper.extract_first_athlete_from(countries, sport)
         scrapper.write_csv('first_athlete_from_countries.csv', header, results) 
         print(results)
     

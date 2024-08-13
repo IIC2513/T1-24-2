@@ -1,16 +1,13 @@
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from driver import Driver
 from time import sleep
-
-
 
 class Scrapper:
 
     def __init__(self, chrome: Driver):
         self.chrome = chrome
 
-    def find_top_10_countries(self) -> list:
+    def extract_top_10_countries(self) -> list:
         self.chrome.load_page('https://olympics.com/')
         print("Página cargada\n")
         print("durmiendo 1s")
@@ -48,7 +45,7 @@ class Scrapper:
             countries_info.append([country.text, gold.text, silver.text, bronze.text, total.text])
         return countries_info
         
-    def find_top_n_sports_from(self, country: str, n:int) -> list:
+    def extract_top_n_sports_from(self, country: str, n:int) -> list:
         # De momento solo funciona para los primeros 8 países por temas de scroll.
         self.chrome.load_page('https://olympics.com/')
         print("Página cargada\n")
@@ -101,7 +98,7 @@ class Scrapper:
 
         return sports_info
 
-    def find_first_athlete_from(self, countries: list, sport: str) -> list:
+    def extract_first_athlete_from(self, countries: list, sport: str) -> list:
         # De momento solo funciona para los primeros 8 países por temas de scroll.
         self.chrome.load_page('https://olympics.com/')
         print("Página cargada\n")
@@ -220,7 +217,7 @@ class Scrapper:
         
         return countries_info
 
-    def find_top_medallists(self, country: str, sport: str, quantity: int) -> list:
+    def extract_top_medallists(self, country: str, sport: str, quantity: int) -> list:
         self.chrome.click_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
         self.chrome.click_element(By.XPATH, '//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
         self.chrome.click_element(By.XPATH, '//*[@id="paris2024-header"]/div/div[3]/a[2]')
@@ -244,7 +241,7 @@ class Scrapper:
 
         return medallists_info
     
-    def find_top_medallists_gender(self, gender: str, quantity: int) -> list:
+    def extract_top_medallists_gender(self, gender: str, quantity: int) -> list:
 
         self.chrome.click_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
         self.chrome.click_element(By.XPATH, '//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
