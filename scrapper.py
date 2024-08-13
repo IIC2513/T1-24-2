@@ -279,26 +279,6 @@ class Scrapper:
 
         return medallists_info
 
-    def write_countries_csv(self, info: list, filename: str) -> None:
-        header = "COUNTRY;GOLDS;SILVERS;BRONZES;TOTAL\n"
-
-        with open(filename, mode='w', newline='', encoding='utf-8') as file:
-            file.write(header)
-            for country in info:
-                file.write(f"{country[0].upper()};{country[1]};{country[2]};{country[3]};{country[4]}\n")
-            file.close()
-
-        print(f"Se ha creado el archivo {filename}\n")
-
-    def write_medallists_csv(self, info: list, filename: str) -> None:
-        header = "DEPORTISTA,OROS,PLATAS,BRONCES,TOTAL"
-        with open(f'test/csv_student/{filename}', mode='w', encoding='utf-8') as file: 
-            print(header, file=file)
-            for medallist in info:
-                print(f"{medallist[0]},{medallist[1]},{medallist[2]},{medallist[3]},{medallist[4]}", file=file)
-
-        print(f"Se ha creado el archivo {filename}")
-
     # Función genérica para escribir en un archivo CSV
     def write_csv(self, filename: str, header: str, info: list) -> None:
         with open(f'test/csv_student/{filename}', mode='w', newline='', encoding='utf-8') as file:
