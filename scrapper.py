@@ -39,51 +39,29 @@ class Scrapper:
         return countries_info
         
     def extract_top_n_sports_from(self, country: str, n:int) -> list:
-        # De momento solo funciona para los primeros 8 países por temas de scroll.
-        self.chrome.load_page('https://olympics.com/')
-        print("Página cargada\n")
-        print("durmiendo 1s")
-        sleep(1)
+        self.chrome.load_page('https://olympics.com/en/paris-2024/medals')
+        self.__accept_cookies()
 
-        print("seleccionando coockies")
-        # trata de aceptar coockies si existe:
-        try:
-            self.chrome.click_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
-        except:
-            pass
+        xpath_filter_button = '//*[@data-testid="extraSettings"]'
+        relative_xpath_filter_country =  '//*[@id="p2024-main-content"]/div[1]/div[1]/div/div[2]/div/div[1]/button'
+        xpath_button_plus = '//*[@data-testid="expand-discipline-icon"]'
+        xpath_body_table = '//*[@data-testid="noc-row"]/div[2]'
 
-        print("ir a tablas de medallas") 
-        self.chrome.click_element(By.XPATH, '//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
-
-        print("Click en botón de filtro")
-        self.chrome.click_element(By.XPATH, '/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
-
-        print("Click en filtro pais")
-        self.chrome.click_element(By.XPATH, '/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[1]/button/div[2]')
-
-        # Tratar de buscar el país, y si no se encuentra, imprimir que no se encontró:
-        print("Click en el país")
+        self.chrome.click_element(By.XPATH, xpath_filter_button)
+        self.chrome.click_element(By.XPATH, relative_xpath_filter_country)
         self.chrome.click_element(By.XPATH, f"//div[@role='option' and contains(text(), '{country}')]")
-
-        print("Click en botón +")
-        self.chrome.click_element(By.XPATH, f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div') # click en boton +
-
-        print("Esperando 1s")
-        sleep(1)
+        self.chrome.click_element(By.XPATH, xpath_button_plus)
         
-        xpath_father = '/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div/div/div/div[2]'
-
         sports_info = []
         quantity = n
 
         for i in range(1, quantity+1):
             try:
-                print("Deporte ", i)
-                sport = self.chrome.find_element(By.XPATH, f'{xpath_father}/div[{i}]/span[1]')
-                gold = self.chrome.find_element(By.XPATH, f'{xpath_father}/div[{i}]/span[2]')
-                silver = self.chrome.find_element(By.XPATH, f'{xpath_father}/div[{i}]/span[3]')
-                bronze = self.chrome.find_element(By.XPATH, f'{xpath_father}/div[{i}]/span[4]')
-                total = self.chrome.find_element(By.XPATH, f'{xpath_father}/div[{i}]/span[5]')
+                sport = self.chrome.find_element(By.XPATH, f'{xpath_body_table}/div[{i}]/span[1]')
+                gold = self.chrome.find_element(By.XPATH, f'{xpath_body_table}/div[{i}]/span[2]')
+                silver = self.chrome.find_element(By.XPATH, f'{xpath_body_table}/div[{i}]/span[3]')
+                bronze = self.chrome.find_element(By.XPATH, f'{xpath_body_table}/div[{i}]/span[4]')
+                total = self.chrome.find_element(By.XPATH, f'{xpath_body_table}/div[{i}]/span[5]')
                 
                 sports_info.append([sport.text, gold.text, silver.text, bronze.text, total.text])
             except:
@@ -280,7 +258,7 @@ if __name__ == '__main__':
     chrome = Driver()
     chrome.initialize_driver()
     scrapper = Scrapper(chrome)
-    countries = scrapper.extract_top_10_countries()
-    header = 'COUNTRY;GOLD;SILVER;BRONZE;TOTAL'
-    scrapper.write_csv('top_10_countries.csv', header, countries)
-    print(countries)
+    country = 'Chile'
+    sports = scrapper.extract_top_n_sports_from(country, 3)
+    header = 'SPORT;GOLD;SILVER;BRONZE;TOTAL'
+    scrapper.write_csv('top_n_sports_from_country.csv', header, sports)
