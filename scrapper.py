@@ -183,27 +183,27 @@ class Scrapper:
         return medallists_info
     
     def extract_top_medallists_gender(self, gender: str, quantity: int) -> list:
+        self.chrome.load_page('https://olympics.com/en/paris-2024/medals/medallists')
+        self.__accept_cookies()
 
-        self.chrome.click_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
-        self.chrome.click_element(By.XPATH, '//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
-        self.chrome.click_element(By.XPATH, '//*[@id="paris2024-header"]/div/div[3]/a[2]')
-        self.chrome.click_element(By.XPATH, '//*[@id="p2024-main-content"]/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
-        self.chrome.click_element(By.XPATH, '/html/body/div[1]/main/div[3]/div[1]/div[1]/div/div[2]/div/div[7]/button')
+        xpath_filter_button = '//*[@data-testid="extraSettings"]'
+        relative_xpath_filter_gender =  '//*[@id="p2024-main-content"]/div[1]/div[1]/div/div[2]/div/div[7]/button'
+        xpath_list = '//*[@data-test-id="virtuoso-item-list"]'
+        xpath_data_text = 'div/div/div[1]'
 
+        self.chrome.click_element(By.XPATH, xpath_filter_button)
+        self.chrome.click_element(By.XPATH, relative_xpath_filter_gender)
         self.chrome.click_element(By.XPATH, f"//div[@role='option' and text()='{gender}']")
-
-        sleep(2)
+        self.chrome.scroll_to_element(By.XPATH, xpath_list)
 
         medallists_info = []
-
         for i in range(1, quantity + 1):
-            medallist = self.chrome.find_element(By.XPATH, f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/div[2]/span')
-            gold = self.chrome.find_element(By.XPATH, f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[1]')
-            silver = self.chrome.find_element(By.XPATH, f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[2]')
-            bronze =  self.chrome.find_element(By.XPATH, f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[3]')
-            total = self.chrome.find_element(By.XPATH, f'/html/body/div[1]/main/div[3]/div[1]/div[2]/div/div[2]/div/div[2]/div[{i}]/div/div/div[1]/span[4]')
+            medallist = self.chrome.find_element(By.XPATH, f'{xpath_list}/div[{i}]/{xpath_data_text}/div[2]/span')
+            gold = self.chrome.find_element(By.XPATH, f'{xpath_list}/div[{i}]/{xpath_data_text}/span[1]')
+            silver = self.chrome.find_element(By.XPATH, f'{xpath_list}/div[{i}]/{xpath_data_text}/span[2]')
+            bronze =  self.chrome.find_element(By.XPATH, f'{xpath_list}/div[{i}]/{xpath_data_text}/span[3]')
+            total = self.chrome.find_element(By.XPATH, f'{xpath_list}/div[{i}]/{xpath_data_text}/span[4]')
             medallists_info.append([medallist.text, gold.text, silver.text, bronze.text, total.text])
-
 
         return medallists_info
 
@@ -229,7 +229,6 @@ if __name__ == '__main__':
     chrome.initialize_driver()
     scrapper = Scrapper(chrome)
     header = 'NAME;GOLD;SILVER;BRONZE;TOTAL'
-    country = 'United States of America'
-    sport = 'Artistic Gymnastics'
-    results = scrapper.extract_top_medallists(country, sport, 5)
-    scrapper.write_csv('top_medallists_sport_country.csv', header, results)
+    gender = 'Female'
+    results = scrapper.extract_top_medallists_gender(gender, 5)
+    scrapper.write_csv('top_medallists_female.csv', header, results)
