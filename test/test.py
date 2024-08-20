@@ -13,18 +13,21 @@ from driver import Driver
 
 class ScraperTest(unittest.TestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        # Este método se ejecuta una sola vez antes de todos los tests
+        cls.chrome = Driver()
+        cls.chrome.initialize_driver()
+        cls.scrapper = Scrapper(cls.chrome)
+
     def setUp(self):
-        chrome = Driver()
-        chrome.initialize_driver()
-        chrome.load_page('https://olympics.com/')
-        self.scrapper = Scrapper(chrome)
+        # Este método se ejecuta antes de cada test
+        self.chrome.load_page('https://olympics.com/')
 
     def test_top_10_countries(self):
-
         countries = self.scrapper.extract_top_10_countries()
         header = 'COUNTRY;GOLD;SILVER;BRONZE;TOTAL'
         self.scrapper.write_csv('top_10_countries.csv', header, countries)
-
         base_content = pd.read_csv('test/csv_base/top_10_countries.csv')
         
         try:
@@ -35,12 +38,10 @@ class ScraperTest(unittest.TestCase):
         self.assertTrue(base_content.equals(student_content), 'Los archivos no son iguales')   
 
     def test_top_n_sports_from(self):
-            
             country = 'Chile'
             sports = self.scrapper.extract_top_n_sports_from(country, 3)
             header = 'SPORT;GOLD;SILVER;BRONZE;TOTAL'
             self.scrapper.write_csv('top_n_sports_from_country.csv', header, sports)
-    
             base_content = pd.read_csv('test/csv_base/top_n_sports_from_country.csv')
             
             try:
@@ -51,13 +52,11 @@ class ScraperTest(unittest.TestCase):
             self.assertTrue(base_content.equals(student_content), 'Los archivos no son iguales')
 
     def test_first_athlete_from_countries(self):
-            
             countries = ['United States of America', 'Chile', 'Japan']
             sport = 'Athletics'
             header = 'NAME;CATEGORY;MEDAL;COUNTRY;SPORT'
             results = self.scrapper.extract_first_athlete_from(countries, sport)
             self.scrapper.write_csv('first_athlete_from_countries.csv', header, results) 
-    
             base_content = pd.read_csv('test/csv_base/first_athlete_from_countries.csv')
             
             try:
@@ -68,13 +67,11 @@ class ScraperTest(unittest.TestCase):
             self.assertTrue(base_content.equals(student_content), 'Los archivos no son iguales')
     
     def test_find_top_medallists(self):
-        
         header = 'NAME;GOLD;SILVER;BRONZE;TOTAL'
         country = 'United States of America'
         sport = 'Artistic Gymnastics'
         results = self.scrapper.extract_top_medallists(country, sport, 5)
         self.scrapper.write_csv('top_medallists_sport_country.csv', header, results)
-
         base_content = pd.read_csv('test/csv_base/top_medallists_sport_country.csv')
         
         try:
@@ -85,12 +82,10 @@ class ScraperTest(unittest.TestCase):
         self.assertTrue(base_content.equals(student_content), 'Los archivos no son iguales')   
 
     def test_find_top_medallists_gender(self):
-
         header = 'NAME;GOLD;SILVER;BRONZE;TOTAL'
         gender = 'Female'
         results = self.scrapper.extract_top_medallists_gender(gender, 5)
         self.scrapper.write_csv('top_medallists_female.csv', header, results)
-
         base_content = pd.read_csv('test/csv_base/top_medallists_female.csv') 
 
         try:

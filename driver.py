@@ -10,12 +10,13 @@ class Driver:
 
     def __init__(self):
         self.options = Options()
+        self.options.page_load_strategy = 'eager'
         self.driver = None
 
     def initialize_driver(self) -> None:
         # En caso que no cuenten con el driver de Chrome, deben descomentar esta linea
         # self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-        self.driver = webdriver.Chrome()
+        self.driver = webdriver.Chrome(options=self.options)
         self.driver.delete_all_cookies()
         self.driver.maximize_window()
 
