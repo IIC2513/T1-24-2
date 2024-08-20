@@ -7,39 +7,32 @@ class Scrapper:
     def __init__(self, chrome: Driver):
         self.chrome = chrome
 
-    def extract_top_10_countries(self) -> list:
-        self.chrome.load_page('https://olympics.com/')
-        print("Página cargada\n")
-        print("durmiendo 1s")
-        sleep(1)
-
-        print("seleccionando coockies")
-        # trata de aceptar coockies si existe:
+    def __accept_cookies(self):
         try:
-            self.chrome.click_element(By.XPATH, '//*[@id="onetrust-accept-btn-handler"]')
+            sleep(1)
+            self.chrome.click_element(By.ID, 'onetrust-accept-btn-handler')
         except:
             pass
+        
+    def extract_top_10_countries(self) -> list:
+        self.chrome.load_page('https://olympics.com/en/paris-2024/medals')
+        self.__accept_cookies()
 
-        print("ir a tablas de medallas") 
-        self.chrome.click_element(By.XPATH, '//*[@id="__next"]/div/header/div/div[1]/nav[1]/nav[2]/a[3]')
-
-        #Hacer scroll hasta el elemento con Xpath = /html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div[8]/div/div/div
-        print("Haciendo scroll para cargar info necesaria")
-        self.chrome.scroll_to_element(By.XPATH, '/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/div[8]/div/div/div')
+        xpath_list = '//*[@data-test-id="virtuoso-item-list"]'
+        xpath_data_span = 'div/div/div/span'
+        self.chrome.scroll_to_element(By.XPATH, xpath_list)
 
         countries_info = []
-        quantity = 10    # Con hasta 8 funciona, pero 9 y 10 ya no se puede hasta hacer scroll
-        
-        xpath_father = '/html/body/div[1]/main/div[3]/div[1]/div[2]/div[2]/div/div[2]/'
-
+        quantity = 10    
+    
         for index in range(1, quantity+1):
             print(index)
 
-            country = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/div/span[3]')
-            gold = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[1]')
-            silver = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[2]')
-            bronze = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[3]')
-            total = self.chrome.find_element(By.XPATH, f'{xpath_father}div[{index}]/div/div/div/span[4]')
+            country = self.chrome.find_element(By.XPATH, f'{xpath_list}/div[{index}]/div/{xpath_data_span}[3]')
+            gold = self.chrome.find_element(By.XPATH, f'{xpath_list}/div[{index}]/{xpath_data_span}[1]')
+            silver = self.chrome.find_element(By.XPATH, f'{xpath_list}/div[{index}]/{xpath_data_span}[2]')
+            bronze = self.chrome.find_element(By.XPATH, f'{xpath_list}/div[{index}]/{xpath_data_span}[3]')
+            total = self.chrome.find_element(By.XPATH, f'{xpath_list}/div[{index}]/{xpath_data_span}[4]')
 
             # Agregar los datos a la lista de países
             countries_info.append([country.text, gold.text, silver.text, bronze.text, total.text])
@@ -282,3 +275,12 @@ class Scrapper:
                 file.write(row_data + "\n")
 
         print(f"Se ha creado el archivo {filename}\n")
+
+if __name__ == '__main__':
+    chrome = Driver()
+    chrome.initialize_driver()
+    scrapper = Scrapper(chrome)
+    countries = scrapper.extract_top_10_countries()
+    header = 'COUNTRY;GOLD;SILVER;BRONZE;TOTAL'
+    scrapper.write_csv('top_10_countries.csv', header, countries)
+    print(countries)
