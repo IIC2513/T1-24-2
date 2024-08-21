@@ -38,8 +38,8 @@ class ScraperTest(unittest.TestCase):
         self.assertTrue(base_content.equals(student_content), 'Los archivos no son iguales')   
 
     def test_top_n_sports_from(self):
-            country = 'Chile'
-            sports = self.scrapper.extract_top_n_sports_from(country, 3)
+            country = 'Ukraine'
+            sports = self.scrapper.extract_top_n_sports_from(country, 5)
             header = 'SPORT;GOLD;SILVER;BRONZE;TOTAL'
             self.scrapper.write_csv('top_n_sports_from_country.csv', header, sports)
             base_content = pd.read_csv('test/csv_base/top_n_sports_from_country.csv')
@@ -52,8 +52,8 @@ class ScraperTest(unittest.TestCase):
             self.assertTrue(base_content.equals(student_content), 'Los archivos no son iguales')
 
     def test_first_athlete_from_countries(self):
-            countries = ['United States of America', 'Chile', 'Japan']
-            sport = 'Athletics'
+            countries = ['Spain', 'Kazakhstan', 'Mexico', 'Dominican Republic', 'Chile', 'Puerto Rico']
+            sport = 'Boxing'
             header = 'NAME;CATEGORY;MEDAL;COUNTRY;SPORT'
             results = self.scrapper.extract_first_athlete_from(countries, sport)
             self.scrapper.write_csv('first_athlete_from_countries.csv', header, results) 
@@ -68,8 +68,8 @@ class ScraperTest(unittest.TestCase):
     
     def test_find_top_medallists(self):
         header = 'NAME;GOLD;SILVER;BRONZE;TOTAL'
-        country = 'United States of America'
-        sport = 'Artistic Gymnastics'
+        country = 'Italy'
+        sport = 'Shooting'
         results = self.scrapper.extract_top_medallists(country, sport, 5)
         self.scrapper.write_csv('top_medallists_sport_country.csv', header, results)
         base_content = pd.read_csv('test/csv_base/top_medallists_sport_country.csv')
