@@ -28,7 +28,7 @@ class ScraperTest(unittest.TestCase):
 
     def setUp(self):
         # Este método se ejecuta antes de cada test
-        self.chrome.load_page('https://olympics.com/')
+        self.chrome.load_page('https://olympics.com/en/paris-2024/medals')
 
     @test_id('test_top_10_countries')
     def test_top_10_countries(self):
