@@ -1,3 +1,6 @@
 ./test/csv_student/*.csv
 /test/csv_student/*.csv
 __pycache__/
+/repositories-t1/
+/collector/
+/test/test_report.py

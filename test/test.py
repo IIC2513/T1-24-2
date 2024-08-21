@@ -10,6 +10,12 @@ import pandas as pd
 from scrapper import Scrapper
 from driver import Driver
 
+def test_id(id):
+    def decorator(func):
+        func._test_id = id
+        return func
+    return decorator
+
 
 class ScraperTest(unittest.TestCase):
 
@@ -24,7 +30,9 @@ class ScraperTest(unittest.TestCase):
         # Este método se ejecuta antes de cada test
         self.chrome.load_page('https://olympics.com/')
 
+    @test_id('test_top_10_countries')
     def test_top_10_countries(self):
+        self._test_id = 'test_top_10_countries'
         countries = self.scrapper.extract_top_10_countries()
         header = 'COUNTRY;GOLD;SILVER;BRONZE;TOTAL'
         self.scrapper.write_csv('top_10_countries.csv', header, countries)
@@ -37,36 +45,42 @@ class ScraperTest(unittest.TestCase):
 
         self.assertTrue(base_content.equals(student_content), 'Los archivos no son iguales')   
 
+    @test_id('test_top_n_spots_from')
     def test_top_n_sports_from(self):
-            country = 'Ukraine'
-            sports = self.scrapper.extract_top_n_sports_from(country, 5)
-            header = 'SPORT;GOLD;SILVER;BRONZE;TOTAL'
-            self.scrapper.write_csv('top_n_sports_from_country.csv', header, sports)
-            base_content = pd.read_csv('test/csv_base/top_n_sports_from_country.csv')
-            
-            try:
-                student_content = pd.read_csv('test/csv_student/top_n_sports_from_country.csv')
-            except:
-                self.fail('No se creó el archivo top_n_sports_from_country.csv')
-    
-            self.assertTrue(base_content.equals(student_content), 'Los archivos no son iguales')
+        self._test_id = 'test_top_n_sports_from'
+        country = 'Ukraine'
+        sports = self.scrapper.extract_top_n_sports_from(country, 5)
+        header = 'SPORT;GOLD;SILVER;BRONZE;TOTAL'
+        self.scrapper.write_csv('top_n_sports_from_country.csv', header, sports)
+        base_content = pd.read_csv('test/csv_base/top_n_sports_from_country.csv')
+        
+        try:
+            student_content = pd.read_csv('test/csv_student/top_n_sports_from_country.csv')
+        except:
+            self.fail('No se creó el archivo top_n_sports_from_country.csv')
 
+        self.assertTrue(base_content.equals(student_content), 'Los archivos no son iguales')
+
+    @test_id('test_first_athlete_from_countries')
     def test_first_athlete_from_countries(self):
-            countries = ['Spain', 'Kazakhstan', 'Mexico', 'Dominican Republic', 'Chile', 'Puerto Rico']
-            sport = 'Boxing'
-            header = 'NAME;CATEGORY;MEDAL;COUNTRY;SPORT'
-            results = self.scrapper.extract_first_athlete_from(countries, sport)
-            self.scrapper.write_csv('first_athlete_from_countries.csv', header, results) 
-            base_content = pd.read_csv('test/csv_base/first_athlete_from_countries.csv')
-            
-            try:
-                student_content = pd.read_csv('test/csv_student/first_athlete_from_countries.csv')
-            except:
-                self.fail('No se creó el archivo first_athlete_from_countries.csv')
+        self._test_id = 'test_first_athlete_from_countries'
+        countries = ['Spain', 'Kazakhstan', 'Mexico', 'Dominican Republic', 'Chile', 'Puerto Rico']
+        sport = 'Boxing'
+        header = 'NAME;CATEGORY;MEDAL;COUNTRY;SPORT'
+        results = self.scrapper.extract_first_athlete_from(countries, sport)
+        self.scrapper.write_csv('first_athlete_from_countries.csv', header, results) 
+        base_content = pd.read_csv('test/csv_base/first_athlete_from_countries.csv')
+        
+        try:
+            student_content = pd.read_csv('test/csv_student/first_athlete_from_countries.csv')
+        except:
+            self.fail('No se creó el archivo first_athlete_from_countries.csv')
+
+        self.assertTrue(base_content.equals(student_content), 'Los archivos no son iguales')
     
-            self.assertTrue(base_content.equals(student_content), 'Los archivos no son iguales')
-    
+    @test_id('test_find_top_medallists')
     def test_find_top_medallists(self):
+        self._test_id = 'test_find_top_medallists'
         header = 'NAME;GOLD;SILVER;BRONZE;TOTAL'
         country = 'Italy'
         sport = 'Shooting'
@@ -81,7 +95,9 @@ class ScraperTest(unittest.TestCase):
 
         self.assertTrue(base_content.equals(student_content), 'Los archivos no son iguales')   
 
+    @test_id('test_find_top_medallists_gender')
     def test_find_top_medallists_gender(self):
+        self._test_id = 'test_find_top_medallists_gender'
         header = 'NAME;GOLD;SILVER;BRONZE;TOTAL'
         gender = 'Female'
         results = self.scrapper.extract_top_medallists_gender(gender, 5)
@@ -95,7 +111,9 @@ class ScraperTest(unittest.TestCase):
 
         self.assertTrue(base_content.equals(student_content), 'Los archivos no son iguales')
 
+    @test_id('test_extract_countries_by_total_medals')
     def test_extract_countries_by_total_medals(self):
+        self._test_id = 'test_extract_countries_by_total_medals'
         countries = self.scrapper.extract_by_total_medals(3)
         header = 'COUNTRY;GOLDS;SILVERS;BRONZES;TOTAL'
         self.scrapper.write_csv('total_medals.csv', header, countries)
@@ -108,7 +126,9 @@ class ScraperTest(unittest.TestCase):
         
         self.assertTrue(base_content.equals(student_content), "Los archivos no son iguales")
     
+    @test_id('test_extract_countries_by_alphabetical_order')
     def test_extract_countries_by_alphabetical_order(self):
+        self._test_id = 'test_extract_countries_by_alphabetical_order'
         countries = self.scrapper.extract_by_alphabetical_order(3)
         header = 'COUNTRY;GOLDS;SILVERS;BRONZES;TOTAL'
         self.scrapper.write_csv('alphabetical_order.csv', header, countries)
@@ -120,6 +140,10 @@ class ScraperTest(unittest.TestCase):
             self.fail('No se creó el archivo alphabetical_order.csv')
         
         self.assertTrue(base_content.equals(student_content), 'Los archivos no son iguales')
+
+    def id(self):
+        """Devuelve el ID personalizado si existe, o el ID por defecto."""
+        return getattr(self, '_test_id', super().id())
         
 
 if __name__ == '__main__':
